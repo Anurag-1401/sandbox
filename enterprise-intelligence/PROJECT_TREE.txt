@@ -1,0 +1,145 @@
+﻿PROJECT ROOT: D:\Development\Projects\enterprise-intelligence
+GENERATED: 2026-11-08 17:57:18
+
+|-- backend
+|   |-- alembic
+|   |   |-- versions
+|   |   |   |-- 0cc8791f14b7_create_document_retrieval_schema.py
+|   |   |   |-- 2518674e6b9e_add_full_text_search_to_document_chunks.py
+|   |   |   \-- f0ecb5d8fb17_repair_missing_retrieval_schema.py
+|   |   |-- env.py
+|   |   |-- README
+|   |   \-- script.py.mako
+|   |-- app
+|   |   |-- api
+|   |   |   |-- v1
+|   |   |   |   |-- __init__.py
+|   |   |   |   \-- documents.py
+|   |   |   \-- __init__.py
+|   |   |-- core
+|   |   |   |-- security
+|   |   |   |   |-- auth.py
+|   |   |   |   |-- permissions.py
+|   |   |   |   \-- principal.py
+|   |   |   |-- __init__.py
+|   |   |   |-- config.py
+|   |   |   \-- logging.py
+|   |   |-- db
+|   |   |   |-- models
+|   |   |   |   \-- organiztion.py
+|   |   |   |-- __init__.py
+|   |   |   |-- base.py
+|   |   |   |-- dependencies.py
+|   |   |   |-- security_context.py
+|   |   |   \-- session.py
+|   |   |-- evaluation
+|   |   |   \-- datasets
+|   |   |       \-- regulatory_retrieval.jsonl
+|   |   |-- models
+|   |   |   |-- __init__.py
+|   |   |   |-- document.py
+|   |   |   |-- document_chunk.py
+|   |   |   |-- document_version.py
+|   |   |   |-- identity.py
+|   |   |   \-- organization.py
+|   |   |-- modules
+|   |   |   |-- document_intelligence
+|   |   |   |   |-- extraction
+|   |   |   |   |   \-- __init__.py
+|   |   |   |   |-- fingerprinting
+|   |   |   |   |   |-- __init__.py
+|   |   |   |   |   |-- deduplicator.py
+|   |   |   |   |   \-- hasher.py
+|   |   |   |   |-- ingestion
+|   |   |   |   |   |-- __init__.py
+|   |   |   |   |   |-- file_detector.py
+|   |   |   |   |   \-- metadata.py
+|   |   |   |   |-- parsers
+|   |   |   |   |   |-- __init__.py
+|   |   |   |   |   \-- pdf_parser.py
+|   |   |   |   |-- validation
+|   |   |   |   |   |-- __init__.py
+|   |   |   |   |   |-- exceptions.py
+|   |   |   |   |   |-- file_validator.py
+|   |   |   |   |   |-- signatures.py
+|   |   |   |   |   \-- structure_validator.py
+|   |   |   |   |-- versioning
+|   |   |   |   |   \-- __init__.py
+|   |   |   |   \-- __init__.py
+|   |   |   |-- search
+|   |   |   |   |-- __init__.py
+|   |   |   |   |-- api_dependencies.py
+|   |   |   |   |-- authorization.py
+|   |   |   |   |-- chunking.py
+|   |   |   |   |-- dependencies.py
+|   |   |   |   |-- embedding_service.py
+|   |   |   |   |-- embeddings.py
+|   |   |   |   |-- evaluation.py
+|   |   |   |   |-- hybrid.py
+|   |   |   |   |-- hybrid_search.py
+|   |   |   |   |-- indexing.py
+|   |   |   |   |-- keyword_search.py
+|   |   |   |   |-- repository.py
+|   |   |   |   |-- reranking.py
+|   |   |   |   |-- reranking_service.py
+|   |   |   |   |-- retrieval_service.py
+|   |   |   |   |-- router.py
+|   |   |   |   |-- schemas.py
+|   |   |   |   \-- semantic_search.py
+|   |   |   \-- __init__.py
+|   |   |-- schemas
+|   |   |   |-- __init__.py
+|   |   |   \-- documents.py
+|   |   |-- storage
+|   |   |   |-- __init__.py
+|   |   |   \-- local_storage.py
+|   |   |-- __init__.py
+|   |   \-- main.py
+|   |-- migrations
+|   |   |-- env.py
+|   |   |-- README
+|   |   \-- script.py.mako
+|   |-- sample_documents
+|   |   |-- test_data.csv
+|   |   \-- test_document.txt
+|   |-- storage
+|   |   \-- 00000000-0000-4000-8000-000000000001
+|   |       |-- 618998b8-fa92-4c63-9456-14f520585130
+|   |       |   \-- ae21e511-face-48e6-8cab-e191ba2eff4a
+|   |       |       \-- original.pdf
+|   |       |-- 6b711fa2-ebb6-4752-bd18-6dd6a87e3dda
+|   |       |   \-- df74f95c-e071-481a-8975-c96f483fd2ca
+|   |       \-- cb0cdf97-631e-4c39-9fd4-590eed4de604
+|   |           \-- e7dd402e-67ca-48a3-8fe5-389153a289ac
+|   |-- tests
+|   |   |-- integration
+|   |   |   \-- test_vector_repository.py
+|   |   |-- __init__.py
+|   |   |-- conftest.py
+|   |   |-- test_chunking.py
+|   |   |-- test_embeddings.py
+|   |   |-- test_file_validator.py
+|   |   |-- test_hasher.py
+|   |   |-- test_hybrid.py
+|   |   |-- test_hybrid_search.py
+|   |   |-- test_pdf_extraction.py
+|   |   |-- test_pdf_parser.py
+|   |   \-- test_semantic_search.py
+|   |-- .env
+|   |-- alembic.ini
+|   |-- pytest.ini
+|   \-- requirements.txt
+|-- data
+|   |-- processed
+|   |-- raw
+|   \-- sample_documents
+|-- docker
+|-- frontend
+|-- research
+|   |-- dry_runs
+|   |-- experiments
+|   |-- mathematics
+|   \-- theory
+|-- .gitignore
+|-- docker-compose.yml
+\-- README.md

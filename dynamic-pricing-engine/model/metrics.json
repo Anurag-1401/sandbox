@@ -1,0 +1,23 @@
+{
+  "dataset_rows": 112320,
+  "train_rows": 89856,
+  "test_rows": 22464,
+  "train_end": "2026-01-24 23:00:00",
+  "test_start": "2026-01-25 00:00:00",
+  "models": {
+    "linear_regression": {
+      "rmse": 0.15309478442169935,
+      "mae": 0.11237103065886932
+    },
+    "xgboost": {
+      "rmse": 0.06207267929645646,
+      "mae": 0.049099584164442836
+    }
+  },
+  "coverage": {
+    "states_or_uts": 36,
+    "cities": 78,
+    "localities": 151,
+    "zone_types": 12
+  }
+}

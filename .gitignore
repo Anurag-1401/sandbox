@@ -1,0 +1,60 @@
+
+# ==========================================
+# NODE / REACT
+# ==========================================
+**/node_modules/
+**/.npm/
+**/.pnpm-store/
+**/dist/
+**/build/
+**/.next/
+**/coverage/
+**/.vite/
+
+# ==========================================
+# PYTHON
+# ==========================================
+**/__pycache__/
+**/*.py[cod]
+**/.venv/
+**/venv/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# ==========================================
+# ENVIRONMENT / SECRETS
+# ==========================================
+.env
+.env.*
+!.env.example
+
+# ==========================================
+# MACHINE LEARNING TRAINING ARTIFACTS
+# ==========================================
+**/checkpoint-*/
+**/optimizer.pt
+**/scheduler.pt
+**/training_args.bin
+**/lightning_logs/
+**/mlruns/
+**/wandb/
+
+# Local NER model artifacts
+/enterprise-intelligence/backend/artifacts/models/ner/1.0.0/
+
+# ==========================================
+# TEMPORARY FILES
+# ==========================================
+*.log
+*.tmp
+*.temp
+.cache/
+.temp/
+
+# ==========================================
+# LOCAL ARCHIVES
+# ==========================================
+*.zip
+*.rar
+*.7z

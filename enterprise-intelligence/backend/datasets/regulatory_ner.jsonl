@@ -1,0 +1,8 @@
+
+{"text":"The Bureau of Indian Standards issued IS 13252:2010 on 1 January 2025.","entities":[{"start":4,"end":32,"label":"AUTHORITY"},{"start":40,"end":53,"label":"STANDARD"},{"start":57,"end":72,"label":"DATE"}]}
+{"text":"The manufacturer shall comply with the applicable notification.","entities":[{"start":4,"end":16,"label":"ORG"},{"start":48,"end":60,"label":"REGULATION"}]}
+{"text":"The Ministry of Environment issued the Environment Protection Act 1986.","entities":[{"start":4,"end":29,"label":"AUTHORITY"},{"start":40,"end":68,"label":"REGULATION"},{"start":69,"end":73,"label":"DATE"}]}
+{"text":"The importer must comply with Section 12 of the applicable rules.","entities":[{"start":4,"end":12,"label":"ORG"},{"start":29,"end":39,"label":"CLAUSE"}]}
+{"text":"Electronic equipment manufactured in India must meet the applicable safety standard.","entities":[{"start":0,"end":20,"label":"PRODUCT"},{"start":37,"end":42,"label":"JURISDICTION"},{"start":62,"end":77,"label":"STANDARD"}]}
+{"text":"The company may face a penalty of INR 50000 for non-compliance.","entities":[{"start":4,"end":11,"label":"ORG"},{"start":26,"end":47,"label":"PENALTY"}]}
+{"text":"The Central Pollution Control Board issued the notification on 15 March 2025.","entities":[{"start":4,"end":39,"label":"AUTHORITY"},{"start":48,"end":60,"label":"REGULATION"},{"start":64,"end":77,"label":"DATE"}]}

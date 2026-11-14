@@ -1,0 +1,3 @@
+{"premise":"The manufacturer shall obtain certification before selling the product.","hypothesis":"The manufacturer is required to obtain certification before sale.","label":"entailment"}
+{"premise":"The product must be certified before import.","hypothesis":"The product is exempt from certification.","label":"contradiction"}
+{"premise":"The notification specifies labelling requirements.","hypothesis":"The notification specifies a certification deadline.","label":"neutral"}

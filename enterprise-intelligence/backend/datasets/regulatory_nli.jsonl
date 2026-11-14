@@ -1,0 +1,16 @@
+
+{"premise":"The manufacturer shall obtain certification before selling the product.","hypothesis":"The manufacturer is required to obtain certification before sale.","label":"entailment"}
+{"premise":"The importer must obtain approval before importing electronic equipment.","hypothesis":"The importer is required to receive approval before importing electronic equipment.","label":"entailment"}
+{"premise":"The manufacturer shall not sell uncertified products.","hypothesis":"The manufacturer is permitted to sell uncertified products.","label":"contradiction"}
+{"premise":"The company must submit an annual compliance report.","hypothesis":"The company is not required to submit an annual compliance report.","label":"contradiction"}
+{"premise":"The manufacturer shall maintain product testing records.","hypothesis":"The manufacturer must maintain testing records.","label":"entailment"}
+{"premise":"The notification specifies product labelling requirements.","hypothesis":"The notification specifies a certification deadline.","label":"neutral"}
+{"premise":"The regulation requires registration of importers.","hypothesis":"The regulation requires registration of manufacturers.","label":"neutral"}
+{"premise":"The company shall pay a penalty for non-compliance.","hypothesis":"The company is exempt from penalties for non-compliance.","label":"contradiction"}
+{"premise":"The manufacturer must comply with the applicable Indian Standard.","hypothesis":"The manufacturer is required to follow the applicable Indian Standard.","label":"entailment"}
+{"premise":"The authority may inspect the manufacturing facility.","hypothesis":"The authority must inspect the manufacturing facility.","label":"neutral"}
+{"premise":"The importer shall maintain import records for five years.","hypothesis":"The importer must retain import records for five years.","label":"entailment"}
+{"premise":"The product shall comply with the notified safety requirements.","hypothesis":"The product is exempt from the notified safety requirements.","label":"contradiction"}
+{"premise":"The notification concerns electronic product certification.","hypothesis":"The notification concerns environmental waste disposal.","label":"neutral"}
+{"premise":"The manufacturer shall submit the application within 30 days.","hypothesis":"The manufacturer must submit the application within 30 days.","label":"entailment"}
+{"premise":"The company is liable to a fine for violating the regulation.","hypothesis":"The company cannot be penalized for violating the regulation.","label":"contradiction"}

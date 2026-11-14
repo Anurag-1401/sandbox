@@ -1,0 +1,6 @@
+Enterprise Intelligence Platform
+
+Document Intelligence Module
+
+This document contains sample information
+for testing metadata extraction.

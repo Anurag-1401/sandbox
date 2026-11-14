@@ -1,0 +1,1 @@
+"""Graph-powered investigation and impact analysis."""

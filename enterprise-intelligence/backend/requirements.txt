@@ -1,0 +1,7 @@
+pgvector
+
+transformers
+sentence-transformers
+
+PyJWT[crypto]>=2.10
+pydantic-settings

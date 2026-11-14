@@ -1,0 +1,2 @@
+{"text":"The Bureau of Indian Standards issued IS 13252:2010 on 1 January 2025.","entities":[{"start":4,"end":32,"label":"AUTHORITY"},{"start":40,"end":53,"label":"STANDARD"},{"start":57,"end":72,"label":"DATE"}]}
+{"text":"The manufacturer shall comply with the applicable notification.","entities":[{"start":4,"end":16,"label":"ORG"},{"start":48,"end":60,"label":"REGULATION"}]}
