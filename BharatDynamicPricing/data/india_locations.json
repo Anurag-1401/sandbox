@@ -1,0 +1,577 @@
+{
+  "Andhra Pradesh": {
+    "Visakhapatnam": [
+      "Madhurawada",
+      "Dwaraka Nagar",
+      "Gajuwaka",
+      "Beach Road"
+    ],
+    "Vijayawada": [
+      "Benz Circle",
+      "MG Road",
+      "Governorpet",
+      "Kanuru"
+    ],
+    "Tirupati": [
+      "Tirumala",
+      "Tiruchanoor",
+      "Renigunta",
+      "Tirupati Central"
+    ]
+  },
+  "Arunachal Pradesh": {
+    "Itanagar": [
+      "Naharlagun",
+      "Ganga Market",
+      "Bank Tinali",
+      "Itanagar Central"
+    ]
+  },
+  "Assam": {
+    "Guwahati": [
+      "Paltan Bazaar",
+      "Dispur",
+      "Beltola",
+      "Six Mile",
+      "Guwahati Railway"
+    ],
+    "Dibrugarh": [
+      "Chowkidingee",
+      "AMCH Area",
+      "Milan Nagar"
+    ]
+  },
+  "Bihar": {
+    "Patna": [
+      "Boring Road",
+      "Kankarbagh",
+      "Patliputra Colony",
+      "Patna Junction",
+      "Bailey Road"
+    ],
+    "Gaya": [
+      "Bodh Gaya",
+      "Gaya Junction",
+      "Civil Lines"
+    ]
+  },
+  "Chhattisgarh": {
+    "Raipur": [
+      "Telibandha",
+      "Pandri",
+      "Tatibandh",
+      "Naya Raipur",
+      "Railway Station"
+    ],
+    "Bhilai": [
+      "Civic Centre",
+      "Supela",
+      "Nehru Nagar"
+    ]
+  },
+  "Goa": {
+    "Panaji": [
+      "Miramar",
+      "Campal",
+      "Panjim Market",
+      "Dona Paula"
+    ],
+    "Vasco da Gama": [
+      "Airport Road",
+      "Chicalim",
+      "Vasco Market"
+    ]
+  },
+  "Gujarat": {
+    "Ahmedabad": [
+      "SG Highway",
+      "Navrangpura",
+      "Satellite",
+      "Maninagar",
+      "Bopal",
+      "Airport Road"
+    ],
+    "Surat": [
+      "Vesu",
+      "Adajan",
+      "Varachha",
+      "Ring Road",
+      "Athwa"
+    ],
+    "Vadodara": [
+      "Alkapuri",
+      "Gotri",
+      "Sayajigunj",
+      "Manjalpur"
+    ],
+    "Rajkot": [
+      "Kalawad Road",
+      "University Road",
+      "Raiya Road"
+    ]
+  },
+  "Haryana": {
+    "Gurugram": [
+      "Cyber City",
+      "Golf Course Road",
+      "Sohna Road",
+      "Sector 29",
+      "Udyog Vihar",
+      "IFFCO Chowk"
+    ],
+    "Faridabad": [
+      "Sector 15",
+      "NIT",
+      "Neelam Chowk",
+      "Mathura Road"
+    ],
+    "Panipat": [
+      "Model Town",
+      "GT Road",
+      "Bus Stand"
+    ]
+  },
+  "Himachal Pradesh": {
+    "Shimla": [
+      "Mall Road",
+      "Sanjauli",
+      "Chotta Shimla",
+      "ISBT"
+    ],
+    "Manali": [
+      "Mall Road",
+      "Old Manali",
+      "Vashisht",
+      "Bus Stand"
+    ]
+  },
+  "Jharkhand": {
+    "Ranchi": [
+      "Morabadi",
+      "Harmu",
+      "Lalpur",
+      "Kanke Road",
+      "Ranchi Junction"
+    ],
+    "Jamshedpur": [
+      "Bistupur",
+      "Sakchi",
+      "Sonari",
+      "Adityapur"
+    ]
+  },
+  "Karnataka": {
+    "Bengaluru": [
+      "Whitefield",
+      "Electronic City",
+      "Koramangala",
+      "Indiranagar",
+      "HSR Layout",
+      "Marathahalli",
+      "MG Road",
+      "Hebbal",
+      "Yelahanka"
+    ],
+    "Mysuru": [
+      "Vijayanagar",
+      "Hebbal",
+      "Kuvempunagar",
+      "Mysore Palace"
+    ],
+    "Mangaluru": [
+      "Kadri",
+      "Hampankatta",
+      "Kottara",
+      "Surathkal"
+    ],
+    "Hubballi": [
+      "Gokul Road",
+      "Vidya Nagar",
+      "Keshwapur"
+    ]
+  },
+  "Kerala": {
+    "Kochi": [
+      "Kakkanad",
+      "Edappally",
+      "Fort Kochi",
+      "Vyttila",
+      "Aluva"
+    ],
+    "Thiruvananthapuram": [
+      "Technopark",
+      "Kowdiar",
+      "Pattom",
+      "East Fort"
+    ],
+    "Kozhikode": [
+      "Mavoor Road",
+      "Nadakkavu",
+      "Kallai",
+      "Beach Road"
+    ]
+  },
+  "Madhya Pradesh": {
+    "Indore": [
+      "Vijay Nagar",
+      "Palasia",
+      "Bhawarkua",
+      "Rau",
+      "Airport Road"
+    ],
+    "Bhopal": [
+      "MP Nagar",
+      "Arera Colony",
+      "New Market",
+      "Kolar Road"
+    ],
+    "Gwalior": [
+      "Thatipur",
+      "Lashkar",
+      "City Centre"
+    ]
+  },
+  "Maharashtra": {
+    "Mumbai": [
+      "BKC",
+      "Andheri",
+      "Bandra",
+      "Powai",
+      "Dadar",
+      "Lower Parel",
+      "Colaba",
+      "Borivali",
+      "Kurla",
+      "Thane Road"
+    ],
+    "Pune": [
+      "Hinjawadi",
+      "Kharadi",
+      "Baner",
+      "Wakad",
+      "Viman Nagar",
+      "Hadapsar",
+      "Kothrud",
+      "Shivajinagar"
+    ],
+    "Nagpur": [
+      "Sitabuldi",
+      "Dharampeth",
+      "Sadar",
+      "Wardha Road",
+      "Manish Nagar"
+    ],
+    "Nashik": [
+      "Gangapur Road",
+      "College Road",
+      "Panchavati",
+      "Nashik Road"
+    ],
+    "Navi Mumbai": [
+      "Vashi",
+      "Nerul",
+      "Belapur",
+      "Kharghar",
+      "Airoli"
+    ]
+  },
+  "Manipur": {
+    "Imphal": [
+      "Paona Bazaar",
+      "Lamphel",
+      "Singjamei",
+      "Airport Road"
+    ]
+  },
+  "Meghalaya": {
+    "Shillong": [
+      "Police Bazaar",
+      "Laitumkhrah",
+      "Laban",
+      "Mawlai"
+    ]
+  },
+  "Mizoram": {
+    "Aizawl": [
+      "Dawrpui",
+      "Chaltlang",
+      "Zarkawt",
+      "Bawngkawn"
+    ]
+  },
+  "Nagaland": {
+    "Kohima": [
+      "Mao Gate",
+      "PR Hill",
+      "Midland",
+      "Kohima Market"
+    ]
+  },
+  "Odisha": {
+    "Bhubaneswar": [
+      "Saheed Nagar",
+      "Patia",
+      "Khandagiri",
+      "Jaydev Vihar",
+      "Airport Road"
+    ],
+    "Cuttack": [
+      "Badambadi",
+      "College Square",
+      "CDA",
+      "Choudwar"
+    ]
+  },
+  "Punjab": {
+    "Ludhiana": [
+      "Ferozepur Road",
+      "Model Town",
+      "Dugri",
+      "Ludhiana Junction"
+    ],
+    "Amritsar": [
+      "Golden Temple",
+      "Ranjit Avenue",
+      "Mall Road",
+      "Airport Road"
+    ],
+    "Jalandhar": [
+      "Model Town",
+      "GT Road",
+      "Urban Estate"
+    ]
+  },
+  "Rajasthan": {
+    "Jaipur": [
+      "Malviya Nagar",
+      "C Scheme",
+      "Vaishali Nagar",
+      "Mansarovar",
+      "Tonk Road"
+    ],
+    "Jodhpur": [
+      "Sardarpura",
+      "Ratanada",
+      "Paota",
+      "Clock Tower"
+    ],
+    "Udaipur": [
+      "Hiran Magri",
+      "Fateh Sagar",
+      "Lake Pichola",
+      "Udaipur Station"
+    ]
+  },
+  "Sikkim": {
+    "Gangtok": [
+      "MG Marg",
+      "Tadong",
+      "Deorali",
+      "Tibet Road"
+    ]
+  },
+  "Tamil Nadu": {
+    "Chennai": [
+      "OMR",
+      "T Nagar",
+      "Anna Nagar",
+      "Adyar",
+      "Guindy",
+      "Velachery",
+      "Tambaram",
+      "Airport Road"
+    ],
+    "Coimbatore": [
+      "RS Puram",
+      "Peelamedu",
+      "Gandhipuram",
+      "Saravanampatti"
+    ],
+    "Madurai": [
+      "Anna Nagar",
+      "KK Nagar",
+      "Mattuthavani",
+      "Temple Area"
+    ],
+    "Tiruchirappalli": [
+      "Srirangam",
+      "Cantonment",
+      "Woraiyur"
+    ]
+  },
+  "Telangana": {
+    "Hyderabad": [
+      "HITEC City",
+      "Gachibowli",
+      "Banjara Hills",
+      "Jubilee Hills",
+      "Madhapur",
+      "Kukatpally",
+      "Secunderabad",
+      "Airport Road"
+    ],
+    "Warangal": [
+      "Hanamkonda",
+      "Kazipet",
+      "Warangal Fort"
+    ]
+  },
+  "Tripura": {
+    "Agartala": [
+      "GB Bazaar",
+      "Dhaleswar",
+      "Battala",
+      "Airport Road"
+    ]
+  },
+  "Uttar Pradesh": {
+    "Lucknow": [
+      "Gomti Nagar",
+      "Hazratganj",
+      "Aliganj",
+      "Indira Nagar",
+      "Charbagh"
+    ],
+    "Noida": [
+      "Sector 62",
+      "Sector 18",
+      "Noida Expressway",
+      "Botanical Garden",
+      "Sector 137"
+    ],
+    "Kanpur": [
+      "Swaroop Nagar",
+      "Kakadeo",
+      "Mall Road",
+      "Govind Nagar"
+    ],
+    "Varanasi": [
+      "Assi Ghat",
+      "Lanka",
+      "Godowlia",
+      "Cantt",
+      "Sarnath"
+    ],
+    "Agra": [
+      "Taj Ganj",
+      "Sanjay Place",
+      "Sikandra",
+      "Agra Cantt"
+    ]
+  },
+  "Uttarakhand": {
+    "Dehradun": [
+      "Rajpur Road",
+      "Clock Tower",
+      "ISBT",
+      "Sahastradhara Road"
+    ],
+    "Haridwar": [
+      "Har Ki Pauri",
+      "Jwalapur",
+      "Railway Road",
+      "Kankhal"
+    ],
+    "Rishikesh": [
+      "Tapovan",
+      "Laxman Jhula",
+      "Ram Jhula",
+      "Bus Stand"
+    ]
+  },
+  "West Bengal": {
+    "Kolkata": [
+      "Salt Lake",
+      "New Town",
+      "Park Street",
+      "Ballygunge",
+      "Howrah",
+      "Sealdah",
+      "Airport Road"
+    ],
+    "Siliguri": [
+      "Sevoke Road",
+      "Hill Cart Road",
+      "Matigara",
+      "NJ P Station"
+    ]
+  },
+  "Andaman and Nicobar Islands": {
+    "Port Blair": [
+      "Aberdeen Bazaar",
+      "Airport Road",
+      "Corbyn's Cove",
+      "Dairy Farm"
+    ]
+  },
+  "Chandigarh": {
+    "Chandigarh": [
+      "Sector 17",
+      "Sector 22",
+      "IT Park",
+      "Industrial Area"
+    ]
+  },
+  "Dadra and Nagar Haveli and Daman and Diu": {
+    "Daman": [
+      "Nani Daman",
+      "Moti Daman",
+      "Devka",
+      "Airport Road"
+    ],
+    "Silvassa": [
+      "Vapi Road",
+      "Tokarkhada",
+      "Dadra"
+    ]
+  },
+  "Delhi": {
+    "New Delhi": [
+      "Connaught Place",
+      "Saket",
+      "Dwarka",
+      "Rohini",
+      "Karol Bagh",
+      "Hauz Khas",
+      "Aerocity",
+      "Delhi Airport"
+    ]
+  },
+  "Jammu and Kashmir": {
+    "Srinagar": [
+      "Lal Chowk",
+      "Dal Lake",
+      "Hazratbal",
+      "Airport Road"
+    ],
+    "Jammu": [
+      "Gandhi Nagar",
+      "Trikuta Nagar",
+      "Jammu Tawi",
+      "Airport Road"
+    ]
+  },
+  "Ladakh": {
+    "Leh": [
+      "Leh Market",
+      "Changspa",
+      "Skara",
+      "Airport Road"
+    ]
+  },
+  "Lakshadweep": {
+    "Kavaratti": [
+      "Kavaratti Market",
+      "Jetty Area",
+      "Beach Area"
+    ]
+  },
+  "Puducherry": {
+    "Puducherry": [
+      "White Town",
+      "Lawspet",
+      "Auroville Road",
+      "Bus Stand"
+    ]
+  }
+}

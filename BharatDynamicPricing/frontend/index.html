@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Bharat Dynamic Pricing Engine — Unified Location & Domain Pricing</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <script src="vendor/chart.umd.js"></script>
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header>
+
+        <div class="flag">🇮🇳</div>
+
+        <h1>
+            Bharat Dynamic Pricing Engine
+        </h1>
+
+        <p class="subtitle">
+            Unified location-aware and domain-specific dynamic pricing across five business domains
+        </p>
+
+        <div class="location-badge">
+            <span id="locationBadge">
+                Select a location
+            </span>
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         ERROR
+    ====================================================== -->
+
+    <p
+        id="apiError"
+        class="error hidden"
+    ></p>
+
+
+    <!-- =====================================================
+         LOCATION
+    ====================================================== -->
+
+    <section class="card">
+
+        <h2>📍 Indian Location</h2>
+
+        <div class="controls">
+
+            <div class="field">
+
+                <label for="state">
+                    State / Union Territory
+                </label>
+
+                <select id="state"></select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="city">
+                    City
+                </label>
+
+                <select id="city"></select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="locality">
+                    Locality
+                </label>
+
+                <select id="locality"></select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="zoneType">
+                    Locality Type
+                </label>
+
+                <select id="zoneType"></select>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         DOMAIN SELECTION + BUSINESS INPUTS
+    ====================================================== -->
+    <section class="card integrated-domain-card">
+        <div class="section-title-row">
+            <div>
+                <p class="eyebrow">DOMAIN-AWARE PRICING</p>
+                <h2>Choose the service domain</h2>
+                <p class="section-help">The final price combines the Indian location-aware XGBoost prediction with the selected domain's demand, supply, availability and operating-context adjustment. Both layers are shown separately in the result breakdown.</p>
+            </div>
+            <span class="integration-badge">Unified prediction</span>
+        </div>
+        <div class="controls">
+            <div class="field">
+                <label for="domain">Business domain</label>
+                <select id="domain">
+                    <option value="ride">Ride-hailing</option>
+                    <option value="food">Food delivery</option>
+                    <option value="ecommerce">E-commerce</option>
+                    <option value="entertainment">Entertainment / ticketing</option>
+                    <option value="travel">Travel & tourism</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="domainBaselineLabel">Pricing basis</label>
+                <input id="domainBaselineLabel" value="Trip base fare" readonly>
+            </div>
+        </div>
+        <div id="domainSpecificFields" class="controls domain-specific-fields"></div>
+    </section>
+
+    <section class="card">
+        <h2>📈 Selected-domain demand & capacity context</h2>
+        <p class="section-help">These relative indices drive the domain adjustment. 1.0 means normal; higher demand means pressure, while lower supply/availability means constrained capacity.</p>
+        <div class="controls">
+            <div class="field"><label for="domainDemandIndex">Demand pressure index</label><input id="domainDemandIndex" type="number" min="0.01" step="0.05" value="1.5"></div>
+            <div class="field"><label for="domainSupplyIndex">Supply / capacity index</label><input id="domainSupplyIndex" type="number" min="0.01" step="0.05" value="0.8"></div>
+            <div class="field"><label for="domainAvailabilityIndex">Availability index</label><input id="domainAvailabilityIndex" type="number" min="0.01" step="0.05" value="0.9"></div>
+            <div class="field"><label for="domainTrafficIndex">Traffic effect index</label><input id="domainTrafficIndex" type="number" min="0.01" step="0.05" value="1"></div>
+            <div class="field"><label for="domainWeatherIndex">Weather effect index</label><input id="domainWeatherIndex" type="number" min="0.01" step="0.05" value="1"></div>
+            <div class="field"><label for="domainEventIndex">Event effect index</label><input id="domainEventIndex" type="number" min="0.01" step="0.05" value="1"></div>
+            <div class="field"><label for="domainFestivalIndex">Festival effect index</label><input id="domainFestivalIndex" type="number" min="0.01" step="0.05" value="1"></div>
+            <div class="field"><label for="domainInventoryIndex">Inventory / remaining capacity index</label><input id="domainInventoryIndex" type="number" min="0.01" step="0.05" value="1"></div>
+            <div class="field"><label for="domainPriceCap">Maximum domain adjustment (%)</label><input id="domainPriceCap" type="number" min="0" max="80" value="25"></div>
+            <div class="field"><label for="domainCurrentDemand">Observed current-window demand (optional)</label><input id="domainCurrentDemand" type="number" min="0" placeholder="Use trained model if blank"></div>
+            <div class="field"><label for="domainNextDemand">Next-window demand forecast (optional)</label><input id="domainNextDemand" type="number" min="0" placeholder="Use trained model if blank"></div>
+        </div>
+        <details class="domain-feature-details">
+            <summary>Advanced: exact trained-model feature values</summary>
+            <p class="section-help">Optional JSON values for your domain model's feature schema. Location and domain-specific form values are included automatically; these values override matching fields.</p>
+            <textarea id="domainFeatureJson" rows="4" placeholder='{"hour":14,"day_of_week":2,"lag_1":12,"rolling_mean":10}'></textarea>
+        </details>
+        <div class="optimizer-row">
+            <label class="optimizer-check"><input id="domainOptimize" type="checkbox"> Run counterfactual optimizer</label>
+            <div class="field optimizer-elasticity"><label for="domainElasticity">Elasticity assumption</label><input id="domainElasticity" type="number" max="-0.01" step="0.05" value="-0.6"></div>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         DEMAND & SUPPLY
+    ====================================================== -->
+
+    <section class="card">
+
+        <h2>📊 Demand & Supply</h2>
+
+        <div class="controls">
+
+            <div class="field">
+
+                <label for="basePrice">
+                    Base Price (₹)
+                </label>
+
+                <input
+                    id="basePrice"
+                    type="number"
+                    value="180"
+                    min="1"
+                    step="1"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="demand">
+                    Demand Requests
+                </label>
+
+                <input
+                    id="demand"
+                    type="number"
+                    value="420"
+                    min="0"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="supply">
+                    Available Supply
+                </label>
+
+                <input
+                    id="supply"
+                    type="number"
+                    value="85"
+                    min="1"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="orderDensity">
+                    Order Density
+                </label>
+
+                <input
+                    id="orderDensity"
+                    type="number"
+                    value="0.90"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                >
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         LOCATION DENSITY
+    ====================================================== -->
+
+    <section class="card">
+
+        <h2>🏙️ Locality Characteristics</h2>
+
+        <div class="controls">
+
+            <div class="field">
+
+                <label for="populationDensity">
+                    Population Density
+                </label>
+
+                <input
+                    id="populationDensity"
+                    type="number"
+                    value="0.75"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="commercialDensity">
+                    Commercial Density
+                </label>
+
+                <input
+                    id="commercialDensity"
+                    type="number"
+                    value="0.85"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="restaurantDensity">
+                    Restaurant Density
+                </label>
+
+                <input
+                    id="restaurantDensity"
+                    type="number"
+                    value="0.80"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                >
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         WEATHER
+    ====================================================== -->
+
+    <section class="card">
+
+        <h2>🌧️ Weather & Monsoon</h2>
+
+        <div class="controls">
+
+            <div class="field">
+
+                <label for="weather">
+                    Weather Condition
+                </label>
+
+                <select id="weather"></select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="temperature">
+                    Temperature (°C)
+                </label>
+
+                <input
+                    id="temperature"
+                    type="number"
+                    value="27"
+                    step="0.1"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="humidity">
+                    Humidity (%)
+                </label>
+
+                <input
+                    id="humidity"
+                    type="number"
+                    value="75"
+                    min="0"
+                    max="100"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="rainfall">
+                    Rainfall (mm)
+                </label>
+
+                <input
+                    id="rainfall"
+                    type="number"
+                    value="5"
+                    min="0"
+                    step="0.1"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="visibility">
+                    Visibility (km)
+                </label>
+
+                <input
+                    id="visibility"
+                    type="number"
+                    value="8"
+                    min="0.1"
+                    step="0.1"
+                >
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TRAFFIC
+    ====================================================== -->
+
+    <section class="card">
+
+        <h2>🚦 Traffic</h2>
+
+        <div class="controls">
+
+            <div class="field">
+
+                <label for="traffic">
+                    Traffic Level
+                </label>
+
+                <select id="traffic"></select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="congestion">
+                    Congestion Index
+                </label>
+
+                <input
+                    id="congestion"
+                    type="number"
+                    value="0.80"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="speed">
+                    Average Speed (km/h)
+                </label>
+
+                <input
+                    id="speed"
+                    type="number"
+                    value="18"
+                    min="1"
+                    step="1"
+                >
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FESTIVALS & CULTURE
+    ====================================================== -->
+
+    <section class="card">
+
+        <h2>🪔 Indian Festivals & Culture</h2>
+
+        <div class="controls">
+
+            <div class="field">
+
+                <label for="festival">
+                    Festival
+                </label>
+
+                <select id="festival"></select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="festivalIntensity">
+                    Festival Intensity
+                </label>
+
+                <input
+                    id="festivalIntensity"
+                    type="number"
+                    value="0"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                >
+
+            </div>
+
+
+            <div class="field checkbox-field">
+
+                <label>
+
+                    <input
+                        id="holiday"
+                        type="checkbox"
+                    >
+
+                    National Holiday
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         EVENTS
+    ====================================================== -->
+
+    <section class="card">
+
+        <h2>🎪 Local Events</h2>
+
+        <div class="controls">
+
+            <div class="field checkbox-field">
+
+                <label>
+
+                    <input
+                        id="event"
+                        type="checkbox"
+                    >
+
+                    Event Nearby
+
+                </label>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="eventType">
+                    Event Type
+                </label>
+
+                <input
+                    id="eventType"
+                    type="text"
+                    value="Local_Event"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="attendance">
+                    Event Attendance
+                </label>
+
+                <input
+                    id="attendance"
+                    type="number"
+                    value="0"
+                    min="0"
+                >
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PREDICT BUTTON
+    ====================================================== -->
+
+    <section class="card prediction-action">
+
+        <button id="predictBtn">
+            ⚡ Predict Unified Price
+        </button>
+
+    </section>
+
+
+    <!-- =====================================================
+         PRICE OUTPUT
+    ====================================================== -->
+
+    <section class="price-display card">
+
+        <div class="price-block">
+
+            <span class="label">
+                Base Price
+            </span>
+
+            <span
+                id="baseOut"
+                class="value"
+            >
+                ₹--
+            </span>
+
+        </div>
+
+
+        <div class="price-block highlight">
+
+            <span class="label">
+                Combined Multiplier
+            </span>
+
+            <span
+                id="multOut"
+                class="value"
+            >
+                --x
+            </span>
+
+        </div>
+
+
+        <div class="price-block">
+
+            <span class="label">
+                Predicted Price
+            </span>
+
+            <span
+                id="priceOut"
+                class="value"
+            >
+                ₹--
+            </span>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="card integrated-result-card">
+        <h2>🧩 How the final price was calculated</h2>
+        <div class="integrated-result-grid">
+            <div><span class="result-label">Location model multiplier</span><strong id="locationMultiplierOut">--×</strong><small>Indian XGBoost model</small></div>
+            <div><span class="result-label">Domain adjustment multiplier</span><strong id="domainMultiplierOut">--×</strong><small>Selected domain policy / model</small></div>
+            <div><span class="result-label">Domain model status</span><strong id="domainModelStatusOut">Waiting</strong><small id="domainDemandSourceOut">Demand source: —</small></div>
+        </div>
+        <p id="integrationExplanation" class="section-help">The final recommendation combines locality and operating context with the selected business domain.</p>
+        <div id="domainEffectsOut" class="domain-effects-output"></div>
+    </section>
+
+    <!-- =====================================================
+         FORECAST
+    ====================================================== -->
+
+    <section class="forecast card">
+
+        <h2>
+            📈 6-Hour Location-Model Forecast
+        </h2>
+        <p class="section-help">This chart forecasts the original Indian location-model multiplier. The current recommendation above combines location and selected-domain pricing; future domain adjustments are not projected in this chart.</p>
+
+        <canvas
+            id="forecastChart"
+            height="100"
+        ></canvas>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+
+        <p>
+            Bharat Dynamic Pricing Engine
+            • Location-aware XGBoost
+            • Five business domains
+            • FastAPI
+        </p>
+
+        <p>
+            Location-model training data and domain-model artifact availability are documented in the README. Domain-specific models are only reported as ready when trained artifacts are installed.
+        </p>
+
+    </footer>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+
+</html>

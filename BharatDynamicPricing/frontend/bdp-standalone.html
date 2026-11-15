@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bharat Dynamic Pricing Engine</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="app bdp-app">
+<header><p class="eyebrow">CONTEXT-AWARE PRICING PLATFORM</p><h1>Bharat Dynamic Pricing Engine</h1>
+<p class="subtitle">One pricing framework. Five domain-specific demand systems.</p>
+<nav class="domain-nav" aria-label="Domains">
+<button class="domain active" data-domain="ride">Ride</button><button class="domain" data-domain="food">Food</button>
+<button class="domain" data-domain="ecommerce">E-commerce</button><button class="domain" data-domain="entertainment">Entertainment</button><button class="domain" data-domain="travel">Travel</button></nav>
+</header>
+<div class="status-strip"><span id="apiStatus" class="status-dot">Checking API…</span><span id="modelStatus">Model readiness loading…</span></div>
+<section class="card"><div class="section-heading"><div><p class="eyebrow">01 / REQUEST</p><h2 id="domainTitle">Ride-hailing pricing</h2></div><span class="tag">INR · ₹</span></div>
+<div class="controls">
+<div class="field"><label for="baseline">Baseline price (₹)</label><input id="baseline" type="number" min="0.01" step="0.01" value="350"></div>
+<div class="field"><label for="demand">Demand index</label><input id="demand" type="number" min=".01" step=".05" value="1.5"></div>
+<div class="field"><label for="supply">Supply index</label><input id="supply" type="number" min=".01" step=".05" value=".8"></div>
+<div class="field"><label for="availability">Availability index</label><input id="availability" type="number" min=".01" step=".05" value=".9"></div>
+<div class="field"><label for="traffic">Traffic index</label><input id="traffic" type="number" min=".01" step=".05" value="1"></div>
+<div class="field"><label for="weather">Weather index</label><input id="weather" type="number" min=".01" step=".05" value="1"></div>
+<div class="field"><label for="event">Event index</label><input id="event" type="number" min=".01" step=".05" value="1"></div>
+<div class="field"><label for="festival">Festival index</label><input id="festival" type="number" min=".01" step=".05" value="1"></div>
+<div class="field"><label for="inventory">Inventory / capacity index</label><input id="inventory" type="number" min=".01" step=".05" value="1"></div>
+<div class="field"><label for="cap">Maximum price movement (%)</label><input id="cap" type="number" min="0" max="80" value="25"></div>
+<div class="field"><label for="currentDemand">Observed current demand (optional)</label><input id="currentDemand" type="number" min="0" placeholder="Leave blank if unknown"></div>
+<div class="field"><label for="nextDemand">Next-window forecast (optional)</label><input id="nextDemand" type="number" min="0" placeholder="Leave blank if unknown"></div>
+</div>
+<details class="advanced"><summary>Domain features for trained-model inference</summary><p class="hint">Supply feature values using the exact feature names saved in that domain's feature_schema.json. Blank values are omitted.</p>
+<textarea id="features" rows="4" placeholder='{"hour":14,"day_of_week":2,"lag_1":12,"rolling_mean":10,"available_drivers":35}'></textarea></details>
+<div class="toggle-row"><label><input id="optimize" type="checkbox"> Run counterfactual optimizer</label><div class="field compact"><label for="elasticity">Elasticity assumption</label><input id="elasticity" type="number" max="-.01" step=".05" value="-.6"></div></div>
+<button id="run" class="primary">Calculate recommended price</button><p id="error" class="error hidden" role="alert"></p></section>
+<section class="price-display card">
+<div class="price-block"><span class="label">Baseline price</span><span id="baseOut" class="value">₹--</span></div>
+<div class="price-block highlight"><span class="label">Recommended price</span><span id="priceOut" class="value">₹--</span><span id="changeOut" class="change">--</span></div>
+<div class="price-block"><span class="label">Final multiplier</span><span id="multOut" class="value">--×</span></div></section>
+<section class="grid-two"><div class="card"><p class="eyebrow">02 / EXPLANATION</p><h2>Context effect breakdown</h2><div id="effects" class="effects"><p class="hint">Submit a pricing request to see contributions.</p></div></div>
+<div class="card"><p class="eyebrow">03 / DEMAND</p><h2>Demand signals</h2><div class="signal"><span>Current-window demand</span><strong id="currentOut">Not available</strong></div><div class="signal"><span>Next-window demand</span><strong id="nextOut">Not available</strong></div><div class="signal"><span>Demand prediction source</span><strong id="sourceOut">—</strong></div><div class="signal"><span>Model status</span><strong id="status">Waiting</strong></div></div></section>
+<section class="card"><p class="eyebrow">04 / OPTIMIZATION</p><h2>Counterfactual price simulation</h2><pre id="optimizer">Enable the optimizer to compare candidate prices.</pre></section>
+<footer><p>The primary application now combines Indian locality context and the selected business domain in one price recommendation. BDP separates trained demand forecasts from policy effects; historical research metrics are not presented as live model performance.</p><a href="/index.html">Open unified location + domain pricing dashboard →</a></footer>
+</main><script src="bdp.js"></script></body></html>

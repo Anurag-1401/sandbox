@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.pytest_cache/
+.DS_Store
+data/raw/
+model/domains/*/*.joblib
+model/domains/*/test_predictions.csv
