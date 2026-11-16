@@ -206,20 +206,6 @@ class RAGService:
             raise RAGGenerationError(
                 "The model returned malformed findings."
             ) from exc
-
-        # -----------------------------------------------------
-        # 5. Validate all evidence references.
-        # -----------------------------------------------------
-
-        citations = self.citation_validator.build_citations(
-            findings=findings,
-            evidence_items=evidence_context.items,
-            require_citations=(
-                settings.rag_require_citations
-                and not insufficient_evidence
-            ),
-        )
-
         
         # -----------------------------------------------------
         # 5. Validate all evidence references.

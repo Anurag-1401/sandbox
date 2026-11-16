@@ -1,18 +1,13 @@
+
 from app.modules.search.chunking import (
     DocumentChunker,
-    PageText,
     TextChunk,
 )
 
-from app.modules.search.embeddings import (
-    EmbeddingService,
-    get_embedding_service,
-)
+from app.modules.search.embeddings import EmbeddingService
 
 __all__ = [
     "DocumentChunker",
-    "PageText",
     "TextChunk",
     "EmbeddingService",
-    "get_embedding_service",
 ]

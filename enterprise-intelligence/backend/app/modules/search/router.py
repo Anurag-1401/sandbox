@@ -58,13 +58,12 @@ def search_documents(
             )
     
     
+    
     if payload.version_id is not None:
         if payload.document_id is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    "document_id is required when version_id is supplied"
-                ),
+                detail="document_id is required when version_id is supplied",
             )
 
         version = db.execute(
@@ -82,12 +81,6 @@ def search_documents(
                 detail="Document version not found",
             )
 
-
-    if version is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Document version not found",
-        )
 
     if payload.version_id is not None and payload.document_id is None:
         raise HTTPException(

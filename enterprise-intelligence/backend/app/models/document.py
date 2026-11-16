@@ -1,12 +1,15 @@
+
 import uuid
 from datetime import datetime
 
 from sqlalchemy import (
+    Boolean,
     DateTime,
     ForeignKey,
     String,
     UniqueConstraint,
     func,
+    text,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -50,6 +53,26 @@ class Document(Base):
         nullable=False,
         default="uploaded",
         server_default="uploaded",
+    )
+
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+        server_default=text("true"),
+    )
+
+    visibility: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False,
+        default="organization",
+        server_default="organization",
+    )
+
+    owner_user_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("users.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(

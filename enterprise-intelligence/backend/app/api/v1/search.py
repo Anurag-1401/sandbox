@@ -5,7 +5,7 @@ from app.core.config import settings
 from app.core.security.auth import get_current_principal
 from app.core.security.principal import UserPrincipal
 from app.db.session import get_db
-from app.modules.search.embeddings import get_embedding_service
+from app.modules.search.dependencies import get_embedding_service
 from app.modules.search.reranking import get_reranker
 from app.modules.search import RetrievalService
 from app.schemas.search import SearchRequest, SearchResponse
