@@ -1,5 +1,7 @@
 
 from fastapi import FastAPI
+import os
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.documents import router as documents_router
 from app.modules.search.router import router as search_router
@@ -29,6 +31,35 @@ app = FastAPI(
         "AI-powered enterprise research and investigation platform"
     ),
     version="0.3.0",
+)
+
+allowed_origins = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv(
+        "CORS_ALLOWED_ORIGINS",
+        "http://localhost:5173",
+    ).split(",")
+    if origin.strip()
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=[
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "OPTIONS",
+    ],
+    allow_headers=[
+        "Authorization",
+        "Content-Type",
+        "X-Organization-ID",
+        "Accept",
+    ],
 )
 
 API_PREFIX = "/api/v1"

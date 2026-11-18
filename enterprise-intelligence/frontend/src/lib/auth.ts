@@ -1,3 +1,4 @@
+import { organizationContext } from "./organization-context";
 
 let accessToken: string | null = null;
 
@@ -12,6 +13,7 @@ export const auth = {
 
   clear(): void {
     accessToken = null;
+    organizationContext.clear();
   },
 
   isAuthenticated(): boolean {

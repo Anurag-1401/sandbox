@@ -90,20 +90,21 @@ class GraphInvestigationCreate(BaseModel):
 
     include_evidence: bool = True
 
+    
     @model_validator(mode="after")
     def validate_roots(self):
         if len(set(self.root_node_ids)) != len(self.root_node_ids):
             raise ValueError("Duplicate root node IDs are not allowed")
 
-        return self
-
         if not set(self.node_types).issubset(VALID_NODE_TYPES):
             raise ValueError("Unsupported node type filter")
-    
+
         if not set(self.relationship_types).issubset(
             VALID_RELATIONSHIP_TYPES
         ):
             raise ValueError("Unsupported relationship type filter")
+
+        return self
 
 
 class GraphInvestigationFindingResponse(BaseModel):

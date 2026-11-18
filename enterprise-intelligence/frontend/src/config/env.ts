@@ -1,10 +1,25 @@
 
+const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+
+if (import.meta.env.PROD && !configuredApiBaseUrl) {
+  throw new Error(
+    "VITE_API_BASE_URL must be configured for production."
+  );
+}
+
+const apiBaseUrl = (
+  configuredApiBaseUrl || "http://localhost:8000"
+).replace(/\/+$/, "");
+
 const clean = (value: string | undefined) =>
   (value || "").trim().replace(/\/+$/, "");
 
 export const env = {
-  apiBaseUrl: clean(import.meta.env.VITE_API_BASE_URL),
+  apiBaseUrl,
   apiPrefix: "/api/v1",
+
+  authEnabled: import.meta.env.VITE_AUTH_ENABLED === "true",
+  isProduction: import.meta.env.PROD,
 
   oidcAuthority: clean(import.meta.env.VITE_OIDC_AUTHORITY),
   oidcClientId: clean(import.meta.env.VITE_OIDC_CLIENT_ID),

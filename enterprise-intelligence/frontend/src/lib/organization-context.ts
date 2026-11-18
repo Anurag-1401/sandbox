@@ -14,3 +14,20 @@ export function setActiveOrganizationId(id: string): void {
 export function clearActiveOrganizationId(): void {
   window.sessionStorage.removeItem(ORGANIZATION_STORAGE_KEY);
 }
+
+
+let activeOrganizationId: string | null = null;
+
+export const organizationContext = {
+  getOrganizationId(): string | null {
+    return activeOrganizationId;
+  },
+
+  setOrganizationId(id: string | null): void {
+    activeOrganizationId = id?.trim() || null;
+  },
+
+  clear(): void {
+    activeOrganizationId = null;
+  }
+};

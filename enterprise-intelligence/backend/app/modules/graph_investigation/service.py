@@ -93,39 +93,41 @@ class GraphInvestigationService:
 
         return edges
 
-def _load_nodes_for_traversal(
-    self,
-    roots,
-    edges,
-    include_unverified,
-    node_types=None,
-):
 
-    candidate_ids = {
-        root.id for root in roots
-    }
+    def _load_nodes_for_traversal(
+        self,
+        roots,
+        edges,
+        include_unverified,
+        node_types=None,
+    ):
+        candidate_ids = {root.id for root in roots}
 
-    for edge in edges:
-        candidate_ids.add(edge.source_node_id)
-        candidate_ids.add(edge.target_node_id)
+        for edge in edges:
+            candidate_ids.add(edge.source_node_id)
+            candidate_ids.add(edge.target_node_id)
 
-    statement = select(KnowledgeGraphNode).where(
-        KnowledgeGraphNode.organization_id
-        == self.organization_id,
-        KnowledgeGraphNode.id.in_(candidate_ids),
-    )
-
-    if not include_unverified:
-        statement = statement.where(
-            or_(
-                KnowledgeGraphNode.verification_status == "verified",
-                KnowledgeGraphNode.id.in_(
-                    [root.id for root in roots]
-                ),
-            )
+        statement = select(KnowledgeGraphNode).where(
+            KnowledgeGraphNode.organization_id == self.organization_id,
+            KnowledgeGraphNode.id.in_(candidate_ids),
         )
 
-    return self.db.execute(statement).scalars().all()
+        if not include_unverified:
+            statement = statement.where(
+                or_(
+                    KnowledgeGraphNode.verification_status == "verified",
+                    KnowledgeGraphNode.id.in_([root.id for root in roots]),
+                )
+            )
+
+        if node_types:
+            statement = statement.where(
+                KnowledgeGraphNode.node_type.in_(node_types)
+                | KnowledgeGraphNode.id.in_([root.id for root in roots])
+            )
+
+        return self.db.execute(statement).scalars().all()
+
 
     def _load_evidence(self, node_ids):
 
