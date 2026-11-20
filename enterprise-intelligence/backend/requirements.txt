@@ -1,7 +1,57 @@
+# ==============================
+# FastAPI Application
+# ==============================
+fastapi
+uvicorn[standard]
+python-multipart
+httpx
+
+# ==============================
+# Database and ORM
+# ==============================
+sqlalchemy
+alembic
+psycopg[binary]
 pgvector
 
+# ==============================
+# Configuration and Validation
+# ==============================
+pydantic
+pydantic-settings
+python-dotenv
+
+# ==============================
+# Authentication and Security
+# ==============================
+PyJWT[crypto]
+cryptography
+
+# ==============================
+# Document Processing
+# ==============================
+PyMuPDF
+beautifulsoup4
+
+# ==============================
+# AI and LLM Integration
+# ==============================
+openai
+groq
+langgraph
+
+# ==============================
+# Machine Learning
+# ==============================
+numpy
+scipy
+scikit-learn
+joblib
+datasets
 transformers
 sentence-transformers
 
-PyJWT[crypto]>=2.10
-pydantic-settings
+# ==============================
+# Background Processing
+# ==============================
+APScheduler
