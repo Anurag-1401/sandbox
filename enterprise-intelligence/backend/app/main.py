@@ -38,6 +38,7 @@ allowed_origins = [
     for origin in os.getenv(
         "CORS_ALLOWED_ORIGINS",
         "http://localhost:5173",
+        "https://enterprice-intelligence.vercel.app",
     ).split(",")
     if origin.strip()
 ]
