@@ -8,7 +8,7 @@ import jwt
 from fastapi import Depends, Header, HTTPException, status
 from jwt import PyJWKClient, PyJWKClientError
 from sqlalchemy import select, text
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError,IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
@@ -100,6 +100,118 @@ def verify_access_token(token: str) -> dict:
     ) as exc:
         raise unauthorized() from exc
 
+def get_authenticated_user(
+    authorization: str | None = Header(default=None),
+    db: Session = Depends(get_db),
+) -> User:
+    """
+    Authenticate an OIDC user without requiring organization membership.
+
+    New users are provisioned automatically after their access token
+    has passed signature, issuer, audience and expiry validation.
+    """
+
+    if not authorization:
+        raise unauthorized()
+
+    scheme, separator, token = authorization.partition(" ")
+
+    if not separator or scheme.lower() != "bearer" or not token.strip():
+        raise unauthorized()
+
+    claims = verify_access_token(token.strip())
+
+    subject = claims.get("sub")
+
+    if not isinstance(subject, str) or not subject:
+        raise unauthorized()
+
+    email = claims.get("email")
+    email_verified = claims.get("email_verified") is True
+
+    # Only persist an email asserted as verified by the identity provider.
+    verified_email = (
+        email.strip().lower()
+        if email_verified and isinstance(email, str)
+        else None
+    )
+
+    display_name = claims.get("name")
+
+    if not isinstance(display_name, str):
+        display_name = None
+
+    try:
+        user = db.execute(
+            select(User).where(User.external_subject == subject)
+        ).scalar_one_or_none()
+
+        if user is None:
+            user = User(
+                external_subject=subject,
+                email=verified_email,
+                email_verified=email_verified,
+                display_name=display_name,
+                is_active=True,
+            )
+
+            db.add(user)
+
+            try:
+                db.flush()
+            except IntegrityError:
+                # Handles simultaneous first logins for the same subject.
+                db.rollback()
+
+                user = db.execute(
+                    select(User).where(
+                        User.external_subject == subject
+                    )
+                ).scalar_one_or_none()
+
+                if user is None:
+                    raise
+
+        if not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Your account is inactive.",
+            )
+
+        if verified_email:
+            user.email = verified_email
+            user.email_verified = True
+
+        if display_name and not user.display_name:
+            user.display_name = display_name
+
+        db.flush()
+
+        db.execute(
+            text(
+                """
+                SELECT set_config(
+                    'app.current_user_id',
+                    :user_id,
+                    true
+                )
+                """
+            ),
+            {"user_id": str(user.id)},
+        )
+
+        return user
+
+    except HTTPException:
+        raise
+
+    except SQLAlchemyError as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Unable to register or resolve authenticated user.",
+        ) from exc
+
 
 def set_transaction_context(
     db: Session,
@@ -147,163 +259,72 @@ def set_transaction_context(
 
 
 def get_current_principal(
-    authorization: str | None = Header(default=None),
     organization_id: UUID | None = Header(
         default=None,
         alias="X-Organization-ID",
     ),
     db: Session = Depends(get_db),
+    user: User = Depends(get_authenticated_user),
 ) -> UserPrincipal:
-    """
-    Authenticate the user and resolve their organization membership.
 
-    Authentication flow:
-    1. Extract Bearer token.
-    2. Verify the OIDC JWT.
-    3. Resolve the internal user.
-    4. Set transaction-local user context.
-    5. Resolve active organization memberships.
-    6. Validate the selected organization.
-    7. Set transaction-local organization context.
-    8. Return the authenticated principal.
-    """
+    # The user is already authenticated and registered.
+    # Now resolve their organization membership.
 
-    # ---------------------------------------------------------
-    # 1. Validate Authorization header
-    # ---------------------------------------------------------
+    db.execute(
+        text(
+            """
+            SELECT set_config(
+                'app.current_user_id',
+                :user_id,
+                true
+            )
+            """
+        ),
+        {"user_id": str(user.id)},
+    )
 
-    if not authorization:
-        raise unauthorized()
+    membership_statement = (
+        select(
+            OrganizationMembership,
+            Organization,
+        )
+        .join(
+            Organization,
+            Organization.id
+            == OrganizationMembership.organization_id,
+        )
+        .where(
+            OrganizationMembership.user_id == user.id,
+            OrganizationMembership.status == "active",
+            Organization.is_active.is_(True),
+        )
+    )
 
-    scheme, separator, token = authorization.partition(" ")
-
-    if (
-        not separator
-        or scheme.lower() != "bearer"
-        or not token.strip()
-    ):
-        raise unauthorized()
-
-    token = token.strip()
-
-    # ---------------------------------------------------------
-    # 2. Verify JWT
-    # ---------------------------------------------------------
-
-    claims = verify_access_token(token)
-
-    external_subject = claims.get("sub")
-
-    if not isinstance(external_subject, str) or not external_subject:
-        raise unauthorized()
-
-    # ---------------------------------------------------------
-    # 3. Resolve internal user
-    # ---------------------------------------------------------
+    if organization_id is not None:
+        membership_statement = membership_statement.where(
+            OrganizationMembership.organization_id == organization_id
+        )
 
     try:
-        user = db.execute(
-            select(User).where(
-                User.external_subject == external_subject,
-                User.is_active.is_(True),
-            )
-        ).scalar_one_or_none()
-
-    except SQLAlchemyError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Unable to resolve authenticated user",
-        ) from exc
-
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="User is not registered or is inactive",
-        )
-
-    # Only accept email data asserted as verified by the OIDC provider.
-    verified_email = claims.get("email")
-    email_verified = claims.get("email_verified") is True
-
-    if email_verified and isinstance(verified_email, str):
-        user.email = verified_email.strip().lower()
-        user.email_verified = True
-        db.flush()
-
-    # ---------------------------------------------------------
-    # 4. Establish user context before membership query
-    # ---------------------------------------------------------
-
-    try:
-        db.execute(
-            text(
-                """
-                SELECT set_config(
-                    'app.current_user_id',
-                    :user_id,
-                    true
-                )
-                """
-            ),
-            {
-                "user_id": str(user.id),
-            },
-        )
-
-        # -----------------------------------------------------
-        # 5. Resolve active memberships
-        # -----------------------------------------------------
-
-        membership_statement = (
-            select(
-                OrganizationMembership,
-                Organization,
-            )
-            .join(
-                Organization,
-                Organization.id
-                == OrganizationMembership.organization_id,
-            )
-            .where(
-                OrganizationMembership.user_id == user.id,
-                OrganizationMembership.status == "active",
-                Organization.is_active.is_(True),
-            )
-        )
-
-        # -----------------------------------------------------
-        # 6. Apply optional organization selection
-        # -----------------------------------------------------
-
-        if organization_id is not None:
-            membership_statement = membership_statement.where(
-                OrganizationMembership.organization_id
-                == organization_id
-            )
-
         memberships = db.execute(
             membership_statement
         ).all()
 
     except SQLAlchemyError as exc:
         raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Unable to resolve organization membership",
+            status_code=503,
+            detail="Unable to resolve organization membership.",
         ) from exc
-
-    # ---------------------------------------------------------
-    # 7. Validate membership
-    # ---------------------------------------------------------
 
     if not memberships:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="No active membership found for this organization",
+            status_code=403,
+            detail="No active membership found for this organization.",
         )
 
     if len(memberships) > 1:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail=(
                 "Multiple organization memberships found. "
                 "Select an organization using X-Organization-ID."
@@ -312,54 +333,23 @@ def get_current_principal(
 
     membership, organization = memberships[0]
 
-    # ---------------------------------------------------------
-    # 8. Establish organization context
-    # ---------------------------------------------------------
-
-    try:
-        db.execute(
-            text(
-                """
-                SELECT set_config(
-                    'app.current_org_id',
-                    :organization_id,
-                    true
-                )
-                """
-            ),
-            {
-                "organization_id": str(organization.id),
-            },
-        )
-
-        db.execute(
-            text(
-                """
-                SELECT set_config(
-                    'app.current_org_role',
-                    :organization_role,
-                    true
-                )
-                """
-            ),
-            {
-                "organization_role": membership.role,
-            },
-        )
-
-    except SQLAlchemyError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Unable to establish organization security context",
-        ) from exc
-
-    # ---------------------------------------------------------
-    # 9. Return authenticated principal
-    # ---------------------------------------------------------
+    db.execute(
+        text(
+            """
+            SELECT
+                set_config('app.current_org_id', :org_id, true),
+                set_config('app.current_org_role', :role, true)
+            """
+        ),
+        {
+            "org_id": str(organization.id),
+            "role": membership.role,
+        },
+    )
 
     return UserPrincipal(
         user_id=user.id,
         organization_id=organization.id,
         role=membership.role,
-        is_active=True,
+        is_active=user.is_active,
     )

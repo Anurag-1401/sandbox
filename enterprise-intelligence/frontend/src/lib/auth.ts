@@ -1,4 +1,4 @@
-import { organizationContext } from "./organization-context";
+import { clearActiveOrganizationId } from "./workspace-context";
 
 let accessToken: string | null = null;
 
@@ -13,7 +13,7 @@ export const auth = {
 
   clear(): void {
     accessToken = null;
-    organizationContext.clear();
+    clearActiveOrganizationId();
   },
 
   isAuthenticated(): boolean {

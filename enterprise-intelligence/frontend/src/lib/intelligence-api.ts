@@ -8,6 +8,7 @@ export interface SearchRequest {
   document_id?: string;
   version_id?: string;
   use_reranker?: boolean;
+  match_mode?: "exact_phrase" | "hybrid";
 }
 
 export interface SearchEvidence {
@@ -82,7 +83,8 @@ export async function searchDocuments(
       candidate_limit: payload.candidate_limit ?? 40,
       document_id: payload.document_id || undefined,
       version_id: payload.version_id || undefined,
-      use_reranker: payload.use_reranker ?? true
+      use_reranker: payload.use_reranker ?? true,
+      match_mode: payload.match_mode ?? "exact_phrase"
     }
   );
 
@@ -100,7 +102,7 @@ export async function askResearchAssistant(
       candidate_limit: payload.candidate_limit ?? 40,
       document_id: payload.document_id || undefined,
       version_id: payload.version_id || undefined,
-      use_reranker: payload.use_reranker ?? true
+      use_reranker: payload.use_reranker ?? true,
     }
   );
 

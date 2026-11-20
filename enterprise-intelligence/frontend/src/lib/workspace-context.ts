@@ -1,16 +1,11 @@
-
-import { env } from "../config/env";
-
 const STORAGE_KEY = "ei.activeOrganizationId";
 
 export function getActiveOrganizationId(): string | null {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined") {
+    return null;
+  }
 
-  return (
-    window.sessionStorage.getItem(STORAGE_KEY) ||
-    env.defaultOrganizationId ||
-    null
-  );
+  return window.sessionStorage.getItem(STORAGE_KEY);
 }
 
 export function setActiveOrganizationId(id: string): void {

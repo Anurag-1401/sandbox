@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { env } from "../config/env";
 import { auth } from "./auth";
-import { organizationContext } from "./organization-context";
+import { getActiveOrganizationId } from "./workspace-context";
 
 export const api = axios.create({
   baseURL: `${env.apiBaseUrl}${env.apiPrefix}`,
@@ -15,7 +15,7 @@ export const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = auth.getAccessToken();
-  const organizationId = organizationContext.getOrganizationId();
+const organizationId = getActiveOrganizationId();
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

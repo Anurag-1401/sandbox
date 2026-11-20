@@ -3,6 +3,14 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
+class OrganizationCreate(BaseModel):
+    name: str = Field(min_length=2, max_length=255)
+    industry: str | None = Field(default=None, max_length=120)
+    timezone: str = Field(
+        default="Asia/Kolkata",
+        min_length=2,
+        max_length=80,
+    )
 
 class OrganizationUpdate(BaseModel):
     model_config = ConfigDict(extra="forbid")

@@ -107,6 +107,19 @@ export const enterpriseApi = {
     return response.data;
   },
 
+  async createWorkspace(payload: {
+  name: string;
+  industry: string | null;
+  timezone: string;
+}) {
+  const response = await api.post<WorkspaceSummary>(
+    "/enterprise/workspaces",
+    payload
+  );
+
+  return response.data;
+},
+
   async updateWorkspace(
     payload: Partial<Pick<Workspace, "name" | "industry" | "timezone" | "settings">>
   ) {

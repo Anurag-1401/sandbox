@@ -12,13 +12,12 @@ from fastapi import (
 from sqlalchemy.orm import Session
 
 from app.db.dependencies import get_db
-from app.core.security.auth import get_current_principal
+from app.core.security.auth import get_current_principal,get_authenticated_user
 from app.core.security.principal import UserPrincipal
 from app.core.security.rbac import (
     Permission,
     require_permission,
 )
-from app.models.identity import User, Organization
 from app.modules.enterprise.schemas import (
     OrganizationUpdate,
     OrganizationResponse,
@@ -26,15 +25,24 @@ from app.modules.enterprise.schemas import (
     MemberDepartmentUpdate,
     InvitationCreate,
     InvitationAccept,
-    InvitationCreated,
+    OrganizationCreate,
     DepartmentCreate,
     ProfileUpdate,
     DashboardResponse,
     AuditLogResponse,
 )
+
+from app.models.identity import (
+    User,
+    Organization,
+    OrganizationMembership,
+)
+
 from app.modules.enterprise.service import EnterpriseService
 
 from app.modules.enterprise.workspaces import list_user_workspaces
+
+from sqlalchemy import text
 
 router = APIRouter(
     prefix="/enterprise",
@@ -61,13 +69,86 @@ def get_service() -> EnterpriseService:
 
 @router.get("/workspaces")
 def get_user_workspaces(
-    principal: UserPrincipal = Depends(get_current_principal),
+    user: User = Depends(get_authenticated_user),
     db: Session = Depends(get_db),
 ):
     return list_user_workspaces(
         db,
-        principal.user_id,
+        user.id,
     )
+
+@router.post(
+    "/workspaces",
+    status_code=status.HTTP_201_CREATED,
+)
+def create_workspace(
+    payload: OrganizationCreate,
+    user: User = Depends(get_authenticated_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        # Establish the authenticated user's database context.
+        db.execute(
+            text(
+                """
+                SELECT
+                    set_config('app.current_user_id', :user_id, true),
+                    set_config('app.allow_org_create', 'true', true)
+                """
+            ),
+            {"user_id": str(user.id)},
+        )
+
+        # Create the organization.
+        organization = Organization(
+            name=payload.name.strip(),
+            industry=payload.industry.strip()
+            if payload.industry else None,
+            timezone=payload.timezone,
+            settings={},
+            is_active=True,
+        )
+
+        db.add(organization)
+        db.flush()
+
+        # The creator automatically becomes the organization owner.
+        membership = OrganizationMembership(
+            organization_id=organization.id,
+            user_id=user.id,
+            role="owner",
+            status="active",
+        )
+
+        db.add(membership)
+        db.flush()
+
+        # Establish the newly created organization context.
+        db.execute(
+            text(
+                """
+                SELECT
+                    set_config('app.current_org_id', :org_id, true),
+                    set_config('app.current_org_role', 'owner', true)
+                """
+            ),
+            {"org_id": str(organization.id)},
+        )
+
+        result = {
+            "organization_id": str(organization.id),
+            "name": organization.name,
+            "industry": organization.industry,
+            "role": "owner",
+        }
+
+        db.commit()
+
+        return result
+
+    except Exception:
+        db.rollback()
+        raise
     
 @router.get(
     "/workspace",
@@ -268,6 +349,17 @@ def accept_invitation(
     db: Session = Depends(get_db),
 ):
     try:
+        db.execute(
+    text(
+        """
+        SELECT set_config(
+            'app.allow_invitation_accept',
+            'true',
+            true
+        )
+        """
+    )
+)
         invitation = EnterpriseService().accept_invitation(
             db,
             token=payload.token,

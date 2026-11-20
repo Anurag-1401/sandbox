@@ -77,26 +77,74 @@ class DocumentChunker:
 
         return AutoTokenizer.from_pretrained(model_name)
 
-    def chunk_text(
-        self,
-        text: str,
-        page_number: int = 1,
-    ) -> list[TextChunk]:
-        if not text or not text.strip():
-            return []
+    
+def chunk_text(
+    self,
+    text: str,
+    page_number: int = 1,
+) -> list[TextChunk]:
+    if not text or not text.strip():
+        return []
 
+    # Use tokenizer offsets to preserve the original source text.
+    # Decoding token IDs can normalize capitalization and whitespace.
+    tokenizer_call = getattr(self.tokenizer, "__call__", None)
+
+    offsets = None
+
+    if callable(tokenizer_call):
+        try:
+            encoded = tokenizer_call(
+                text,
+                add_special_tokens=False,
+                return_offsets_mapping=True,
+            )
+
+            token_ids = encoded["input_ids"]
+            offsets = encoded.get("offset_mapping")
+
+        except (
+            TypeError,
+            NotImplementedError,
+            KeyError,
+            ValueError,
+        ):
+            token_ids = self.tokenizer.encode(
+                text,
+                add_special_tokens=False,
+            )
+    else:
         token_ids = self.tokenizer.encode(
             text,
             add_special_tokens=False,
         )
 
-        if not token_ids:
-            return []
+    if not token_ids:
+        return []
 
-        chunks: list[TextChunk] = []
+    chunks: list[TextChunk] = []
 
-        for start in range(0, len(token_ids), self.stride):
-            end = min(start + self.chunk_size, len(token_ids))
+    for start in range(0, len(token_ids), self.stride):
+        end = min(start + self.chunk_size, len(token_ids))
+
+        content = ""
+
+        # Preferred path: extract the exact original source substring.
+        if offsets is not None and len(offsets) == len(token_ids):
+            valid_offsets = [
+                (int(start_offset), int(end_offset))
+                for start_offset, end_offset in offsets[start:end]
+                if int(end_offset) > int(start_offset)
+            ]
+
+            if valid_offsets:
+                char_start = valid_offsets[0][0]
+                char_end = valid_offsets[-1][1]
+
+                content = text[char_start:char_end].strip()
+
+        # Fallback for tokenizers without offset support.
+        if not content:
             chunk_tokens = token_ids[start:end]
 
             content = self.tokenizer.decode(
@@ -104,21 +152,22 @@ class DocumentChunker:
                 skip_special_tokens=True,
             ).strip()
 
-            if content:
-                chunks.append(
-                    TextChunk(
-                        index=len(chunks),
-                        content=content,
-                        token_count=len(chunk_tokens),
-                        page_start=page_number,
-                        page_end=page_number,
-                    )
+        if content:
+            chunks.append(
+                TextChunk(
+                    index=len(chunks),
+                    content=content,
+                    token_count=end - start,
+                    page_start=page_number,
+                    page_end=page_number,
                 )
+            )
 
-            if end == len(token_ids):
-                break
+        if end == len(token_ids):
+            break
 
-        return chunks
+    return chunks
+
 
     def chunk_pages(
         self,

@@ -37,6 +37,7 @@ class RetrievalService:
         version_id: uuid.UUID | None = None,
         use_reranker: bool = True,
         allowed_document_ids: set[uuid.UUID],
+        match_mode: str = "hybrid",
     ) -> list[RerankedResult] | list[HybridSearchResult]:
 
         candidates = self.hybrid_search.search(
@@ -48,6 +49,7 @@ class RetrievalService:
             candidate_limit=candidate_limit,
             document_id=document_id,
             version_id=version_id,
+            match_mode=match_mode,
         )
 
         if not use_reranker or self.reranker is None:

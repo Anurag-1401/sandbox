@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 
 import uuid
@@ -40,6 +41,7 @@ class HybridSearchService:
         document_id: uuid.UUID | None = None,
         version_id: uuid.UUID | None = None,
         allowed_document_ids: set[uuid.UUID],
+        match_mode: str = "hybrid",
     ) -> list[HybridSearchResult]:
 
         if not query or not query.strip():
@@ -53,33 +55,64 @@ class HybridSearchService:
                 "candidate_limit must be between top_k and 200"
             )
 
+        if match_mode not in {"exact_phrase", "hybrid"}:
+            raise ValueError("Unsupported search match mode")
+
         query = query.strip()
 
         if not allowed_document_ids:
             return []
 
-        query_vector = self.embedding_service.embed_query(query)
+        keyword_service = KeywordSearchService(db)
 
-        semantic_repository = SearchRepository(db)
+        # ==============================================
+        # EXACT PHRASE SEARCH
+        # ==============================================
 
-        semantic_results = (
-            semantic_repository.semantic_search(
+        if match_mode == "exact_phrase":
+
+            keyword_results = keyword_service.search(
                 organization_id=organization_id,
-                query_embedding=query_vector.tolist(),
+                query=query,
                 allowed_document_ids=allowed_document_ids,
                 top_k=candidate_limit,
                 document_id=document_id,
                 version_id=version_id,
-                
+                exact_phrase=True,
             )
-        )
 
-        keyword_service = KeywordSearchService(db)
+            fused = reciprocal_rank_fusion(
+                [],
+                keyword_results,
+                k=self.rrf_k,
+                semantic_weight=self.semantic_weight,
+                keyword_weight=self.keyword_weight,
+            )
+
+            return fused[:top_k]
+
+        # ==============================================
+        # HYBRID SEARCH
+        # Semantic + keyword retrieval
+        # ==============================================
+
+        query_vector = self.embedding_service.embed_query(query)
+
+        semantic_repository = SearchRepository(db)
+
+        semantic_results = semantic_repository.semantic_search(
+            organization_id=organization_id,
+            query_embedding=query_vector.tolist(),
+            allowed_document_ids=allowed_document_ids,
+            top_k=candidate_limit,
+            document_id=document_id,
+            version_id=version_id,
+        )
 
         keyword_results = keyword_service.search(
             organization_id=organization_id,
             query=query,
-             allowed_document_ids=allowed_document_ids,
+            allowed_document_ids=allowed_document_ids,
             top_k=candidate_limit,
             document_id=document_id,
             version_id=version_id,

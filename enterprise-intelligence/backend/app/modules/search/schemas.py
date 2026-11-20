@@ -4,6 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from typing import Literal
 
 class SearchRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -26,6 +27,7 @@ class SearchRequest(BaseModel):
     )
 
     document_id: UUID | None = None
+    match_mode: Literal["exact_phrase", "hybrid"] = "exact_phrase"
     version_id: UUID | None = None
 
     use_reranker: bool = True

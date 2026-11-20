@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState ,type FormEvent} from "react";
 import { Building2 } from "lucide-react";
 
 import { PageHeader } from "../../components/ui/PageHeader";
@@ -28,7 +28,7 @@ export function WorkspaceSettingsPage() {
     setTimezone(activeWorkspace.timezone);
   }, [activeWorkspace]);
 
-  async function save(event: React.FormEvent<HTMLFormElement>) {
+  async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true);
     setError(null);

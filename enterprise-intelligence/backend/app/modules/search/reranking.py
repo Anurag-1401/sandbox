@@ -152,10 +152,13 @@ class CrossEncoderReranker:
         ]
 
         # Higher relevance logit is better.
+        # Higher relevance logit is better.
+        # item[0] is HybridSearchResult.
+        # item[0].result is SearchResult.
         ranked.sort(
             key=lambda item: (
                 -item[1],
-                str(item[0].result.result.chunk_id),
+                str(item[0].result.chunk_id),
             )
         )
 

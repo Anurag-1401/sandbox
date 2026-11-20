@@ -8533,3 +8533,225 @@ a {
   color: #475467;
   background: white;
 }
+
+.workspace-create-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border, #e5e7eb);
+}
+
+.workspace-create-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 16px;
+  border: 1px dashed var(--border, #cbd5e1);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-primary, #1e293b);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.workspace-create-toggle:hover {
+  border-color: var(--primary, #6366f1);
+  background: var(--surface-secondary, #f8fafc);
+}
+
+.workspace-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  text-align: left;
+}
+
+.workspace-create-form h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.workspace-create-form p {
+  margin: 0 0 6px;
+  color: var(--text-secondary, #64748b);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.workspace-create-form label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.workspace-create-form input,
+.workspace-create-form select {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid var(--border, #cbd5e1);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+  color: var(--text-primary, #1e293b);
+  outline: none;
+}
+
+.workspace-create-form input:focus,
+.workspace-create-form select:focus {
+  border-color: var(--primary, #6366f1);
+  box-shadow: 0 0 0 3px rgb(99 102 241 / 12%);
+}
+
+.workspace-create-form button {
+  margin-top: 8px;
+}
+
+.workspace-section {
+  margin-top: 20px;
+}
+
+.workspace-section h2 {
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   SEARCH RESULTS — READABLE EVIDENCE AND QUERY HIGHLIGHTING
+   ========================================================= */
+
+.search-highlight-guide {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 17px;
+  padding: 10px 13px;
+  border: 1px solid #f0e1a7;
+  border-radius: 7px;
+  color: #84651c;
+  background: #fffaf0;
+  font-size: 11px;
+}
+
+.search-highlight-guide svg {
+  flex-shrink: 0;
+}
+
+.evidence-card {
+  padding: 19px;
+}
+
+.evidence-passage-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #edf0f4;
+  color: #778397;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.evidence-passage-heading > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.evidence-content {
+  margin: 0;
+  padding: 17px 18px;
+  border: 1px solid #e8ecf3;
+  border-left: 3px solid #8296ed;
+  border-radius: 0 8px 8px 0;
+  background: #fbfcfe;
+}
+
+.evidence-text {
+  color: #344054;
+  font-size: 12px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.search-highlight {
+  padding: 1px 3px;
+  border-radius: 3px;
+  color: #805400;
+  background: #ffed9e;
+  font-weight: 750;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.evidence-metadata {
+  margin-top: 13px;
+  padding-top: 11px;
+  border-top: 1px solid #edf0f4;
+  gap: 9px 19px;
+}
+
+.evidence-open-link {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  place-items: center;
+  border: 1px solid #e6eaf1;
+  border-radius: 7px;
+  color: #6476c6;
+  background: #fff;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.evidence-open-link:hover {
+  border-color: #cbd5f5;
+  background: #f4f6ff;
+}
+
+@media (max-width: 600px) {
+  .evidence-card {
+    padding: 13px;
+  }
+
+  .evidence-content {
+    padding: 12px;
+  }
+
+  .evidence-text {
+    font-size: 11px;
+  }
+
+  .evidence-passage-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.evidence-text {
+  white-space: pre-wrap;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.search-highlight {
+  background: #ffdf75;
+  color: #704900;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-weight: 750;
+}
+
+.phrase-not-found {
+  color: #9b3b3b;
+  font-size: 12px;
+}

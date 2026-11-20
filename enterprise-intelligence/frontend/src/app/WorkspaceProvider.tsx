@@ -42,6 +42,11 @@ interface WorkspaceContextValue {
   selectWorkspace: (id: string) => Promise<void>;
   refreshWorkspace: () => Promise<void>;
   clearWorkspace: () => void;
+  createWorkspace: (payload: {
+  name: string;
+  industry: string | null;
+  timezone: string;
+}) => Promise<void>;
 }
 
 const WorkspaceContext =
@@ -105,6 +110,51 @@ export function WorkspaceProvider({
       throw cause;
     }
   }, []);
+
+  const createWorkspace = useCallback(
+  async (payload: {
+    name: string;
+    industry: string | null;
+    timezone: string;
+  }) => {
+    setStatus("loading");
+    setError(null);
+
+    try {
+      const created = await enterpriseApi.createWorkspace(payload);
+
+      // Set the organization before requesting its details.
+      setActiveOrganizationId(created.organization_id);
+
+      const workspace = await resolveWorkspace(
+        created.organization_id
+      );
+
+      setWorkspaces((previous) => [
+        ...previous.filter(
+          (item) =>
+            item.organization_id !== created.organization_id
+        ),
+        {
+          organization_id: created.organization_id,
+          name: created.name,
+          industry: created.industry,
+          role: created.role
+        }
+      ]);
+
+      setActiveWorkspace(workspace);
+      setStatus("ready");
+
+    } catch (cause) {
+      clearActiveOrganizationId();
+      setActiveWorkspace(null);
+      setStatus("needs-selection");
+      throw cause;
+    }
+  },
+  []
+);
 
   const clearWorkspace = useCallback(() => {
     clearActiveOrganizationId();
@@ -194,8 +244,7 @@ export function WorkspaceProvider({
         if (!cancelled) {
           setStatus("needs-selection");
           setError(
-            "The backend could not resolve your organization automatically. " +
-            "If you belong to multiple organizations, enter the organization ID."
+            "Unable to load your organizations. Please check your connection and try again."
           );
         }
       }
@@ -215,6 +264,7 @@ export function WorkspaceProvider({
       workspaces,
       error,
       selectWorkspace,
+      createWorkspace,
       refreshWorkspace,
       clearWorkspace
     }),
@@ -224,6 +274,7 @@ export function WorkspaceProvider({
       workspaces,
       error,
       selectWorkspace,
+      createWorkspace,
       refreshWorkspace,
       clearWorkspace
     ]

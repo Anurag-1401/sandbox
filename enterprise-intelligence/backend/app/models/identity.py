@@ -29,6 +29,25 @@ class Organization(Base):
         nullable=False,
     )
 
+    industry: Mapped[str | None] = mapped_column(
+        String(120),
+        nullable=True,
+    )
+
+    timezone: Mapped[str] = mapped_column(
+        String(80),
+        nullable=False,
+        default="Asia/Kolkata",
+        server_default="Asia/Kolkata",
+    )
+
+    settings: Mapped[dict] = mapped_column(
+        sa.JSON,
+        nullable=False,
+        default=dict,
+        server_default=sa.text("'{}'"),
+    )
+
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         default=True,
@@ -57,6 +76,11 @@ class User(Base):
         unique=True,
         nullable=False,
     )
+
+    display_name: Mapped[str | None] = mapped_column(
+    String(200),
+    nullable=True,
+)
 
     email: Mapped[str | None] = mapped_column(
         String(320),
@@ -151,6 +175,11 @@ class OrganizationMembership(Base):
         primary_key=True,
         default=uuid.uuid4,
     )
+
+    department_id: Mapped[uuid.UUID | None] = mapped_column(
+    ForeignKey("departments.id", ondelete="SET NULL"),
+    nullable=True,
+)
 
     organization_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("organizations.id", ondelete="CASCADE"),

@@ -1,15 +1,17 @@
-
 import {
   Activity,
-  BookOpen,
   BrainCircuit,
+  Building2,
   FileSearch,
   Files,
   GitBranch,
   LayoutDashboard,
   Network,
+  Settings,
   ShieldCheck,
-  Workflow
+  Users,
+  Workflow,
+  History
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
@@ -71,12 +73,27 @@ const groups = [
     ]
   },
   {
-    title: "KNOWLEDGE",
+    title: "ORGANIZATION",
     items: [
       {
-        label: "Knowledge Library",
-        path: "/knowledge-library",
-        icon: BookOpen
+        label: "Team Members",
+        path: "/organization/team",
+        icon: Users
+      },
+      {
+        label: "Departments",
+        path: "/organization/departments",
+        icon: Building2
+      },
+      {
+        label: "Workspace Settings",
+        path: "/organization/settings",
+        icon: Settings
+      },
+      {
+        label: "Audit Logs",
+        path: "/organization/audit-logs",
+        icon: History
       }
     ]
   }
@@ -126,7 +143,9 @@ export function Sidebar() {
 
         <div>
           <div className="system-title">Platform workspace</div>
-          <div className="system-subtitle">Document intelligence</div>
+          <div className="system-subtitle">
+            Organization-scoped intelligence
+          </div>
         </div>
       </div>
     </aside>

@@ -107,6 +107,7 @@ def search_documents(
             document_id=payload.document_id,
             version_id=payload.version_id,
             use_reranker=payload.use_reranker,
+            match_mode=payload.match_mode,
         )
 
     except ValueError as exc:

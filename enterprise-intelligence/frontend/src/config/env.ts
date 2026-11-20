@@ -21,6 +21,10 @@ export const env = {
   authEnabled: import.meta.env.VITE_AUTH_ENABLED === "true",
   isProduction: import.meta.env.PROD,
 
+  oidcAudience: clean(
+  import.meta.env.VITE_OIDC_AUDIENCE
+),
+
   oidcAuthority: clean(import.meta.env.VITE_OIDC_AUTHORITY),
   oidcClientId: clean(import.meta.env.VITE_OIDC_CLIENT_ID),
 

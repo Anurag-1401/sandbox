@@ -1,33 +1,37 @@
-
 const ORGANIZATION_STORAGE_KEY = "ei.activeOrganizationId";
-
-export function getActiveOrganizationId(): string | null {
-  if (typeof window === "undefined") return null;
-
-  return window.sessionStorage.getItem(ORGANIZATION_STORAGE_KEY);
-}
-
-export function setActiveOrganizationId(id: string): void {
-  window.sessionStorage.setItem(ORGANIZATION_STORAGE_KEY, id);
-}
-
-export function clearActiveOrganizationId(): void {
-  window.sessionStorage.removeItem(ORGANIZATION_STORAGE_KEY);
-}
-
-
-let activeOrganizationId: string | null = null;
 
 export const organizationContext = {
   getOrganizationId(): string | null {
-    return activeOrganizationId;
+    if (typeof window === "undefined") {
+      return null;
+    }
+
+    return window.sessionStorage.getItem(ORGANIZATION_STORAGE_KEY);
   },
 
   setOrganizationId(id: string | null): void {
-    activeOrganizationId = id?.trim() || null;
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const normalizedId = id?.trim();
+
+    if (!normalizedId) {
+      window.sessionStorage.removeItem(ORGANIZATION_STORAGE_KEY);
+      return;
+    }
+
+    window.sessionStorage.setItem(
+      ORGANIZATION_STORAGE_KEY,
+      normalizedId
+    );
   },
 
   clear(): void {
-    activeOrganizationId = null;
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    window.sessionStorage.removeItem(ORGANIZATION_STORAGE_KEY);
   }
 };

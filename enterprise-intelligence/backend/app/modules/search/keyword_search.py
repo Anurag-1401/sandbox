@@ -34,6 +34,7 @@ class KeywordSearchService:
         top_k: int = 20,
         document_id: uuid.UUID | None = None,
         version_id: uuid.UUID | None = None,
+        exact_phrase: bool = False,
         allowed_document_ids: set[uuid.UUID],
     ) -> list[SearchResult]:
 
@@ -53,6 +54,27 @@ class KeywordSearchService:
             query,
         )
 
+        # Normalize whitespace so a phrase can match even when
+        # the PDF extraction has line breaks between its words.
+        query = " ".join(query.split())
+
+        normalized_content = func.regexp_replace(
+            DocumentChunk.content,
+            r"\s+",
+            " ",
+            "g",
+        )
+
+        literal_match = normalized_content.ilike(
+            self._literal_pattern(query),
+            escape="\\",
+        )
+
+        ts_query = func.websearch_to_tsquery(
+            "simple",
+            query,
+        )
+
         rank = func.ts_rank_cd(
             DocumentChunk.search_vector,
             ts_query,
@@ -60,11 +82,6 @@ class KeywordSearchService:
 
         full_text_match = DocumentChunk.search_vector.op("@@")(
             ts_query
-        )
-
-        literal_match = DocumentChunk.content.ilike(
-            self._literal_pattern(query),
-            escape="\\",
         )
 
         statement = (
@@ -88,7 +105,11 @@ class KeywordSearchService:
                 DocumentVersion.organization_id == organization_id,
                 Document.organization_id == organization_id,
                 DocumentVersion.status == "indexed",
-                or_(full_text_match, literal_match),
+                (
+    literal_match
+    if exact_phrase
+    else or_(full_text_match, literal_match)
+),
             )
         )
 
