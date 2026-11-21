@@ -34,14 +34,14 @@ app = FastAPI(
 )
 
 allowed_origins = [
-    origin.strip().rstrip("/")
+    origin.strip()
     for origin in os.getenv(
         "CORS_ALLOWED_ORIGINS",
-        "http://localhost:5173",
-        "https://enterprice-intelligence.vercel.app",
+        "http://localhost:5173,https://enterprice-intelligence.vercel.app",
     ).split(",")
     if origin.strip()
 ]
+
 
 app.add_middleware(
     CORSMiddleware,
