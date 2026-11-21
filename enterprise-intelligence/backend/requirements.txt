@@ -1,3 +1,4 @@
+
 # ==============================
 # FastAPI Application
 # ==============================
@@ -20,6 +21,7 @@ pgvector
 pydantic
 pydantic-settings
 python-dotenv
+email-validator>=2.0.0
 
 # ==============================
 # Authentication and Security
